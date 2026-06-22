@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skincare Store - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6f42c1;
+            --secondary-color: #d63384;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fb;
+        }
+        
+        .sidebar {
+            height: 100vh;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            position: fixed;
+            z-index: 100;
+            overflow-y: auto;
+        }
+        
+        .sidebar .nav-link {
+            color: var(--dark-color);
+            padding: 12px 20px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover, 
+        .sidebar .nav-link.active {
+            background-color: rgba(111, 66, 193, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .sidebar .nav-link i {
+            width: 25px;
+            text-align: center;
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .dashboard-card {
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-1 { background: linear-gradient(135deg, #6f42c1, #8c68cd); }
+        .card-2 { background: linear-gradient(135deg, #20c997, #3dd9af); }
+        .card-3 { background: linear-gradient(135deg, #fd7e14, #ff9b42); }
+        .card-4 { background: linear-gradient(135deg, #0dcaf0, #35d4f5); }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        
+        .stat-desc {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .recent-orders {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .order-item {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+        
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        
+        .order-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-pending { background-color: #fff3cd; color: #856404; }
+        .status-processing { background-color: #cce5ff; color: #004085; }
+        .status-shipped { background-color: #d4edda; color: #155724; }
+        .status-completed { background-color: #e2e3e5; color: #383d41; }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 10px 20px;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .navbar-nav .nav-link {
+            color: var(--dark-color);
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        
+        .product-image {
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .product-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .product-price {
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #5a32a3;
+            border-color: #5a32a3;
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .badge-category {
+            background-color: rgba(111, 66, 193, 0.1);
+            color: var(--primary-color);
+            font-weight: 500;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .cart-icon {
+            position: relative;
+            font-size: 1.2rem;
+        }
+        
+        /* Responsiveness */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                overflow: hidden;
+            }
+            
+            .sidebar .nav-link span {
+                display: none;
+            }
+            
+            .sidebar .nav-link i {
+                margin-right: 0;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="fas fa-spa me-2"></i>Skincare Store</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="shopDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-shopping-bag me-1"></i> Shop
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-shopping-cart me-2"></i> Keranjang Belanja</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-money-bill-wave me-2"></i> Konfirmasi Pembayaran</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-info-circle me-1"></i> Tentang Kami</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-phone me-1"></i> Kontak</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item me-3">
+                        <a class="nav-link cart-icon" href="#">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="notification-badge">3</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Akun
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i> Akun Saya</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-receipt me-2"></i> Order</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Admin/Customer -->
+            <div class="col-lg-2 d-none d-lg-block sidebar">
+                <div class="d-flex flex-column p-3">
+                    <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none">
+                        <span class="fs-4"><i class="fas fa-tachometer-alt me-2"></i> Dashboard</span>
+                    </a>
+                    <hr>
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link active">
+                                <i class="fas fa-home"></i> <span>Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-list"></i> <span>Kategori Produk</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-box"></i> <span>Produk</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-shopping-cart"></i> <span>Pesanan</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-ticket-alt"></i> <span>Kupon</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-money-bill-wave"></i> <span>Pembayaran</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-users"></i> <span>Pelanggan</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-star"></i> <span>Review Pelanggan</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-envelope"></i> <span>Kontak</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <hr>
+                    <!-- Customer Menu -->
+                    <h6>Akun Pelanggan</h6>
+                    <ul class="nav nav-pills flex-column">
+                        <li>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-tachometer-alt"></i> <span>Dasbor</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-receipt"></i> <span>Order Saya</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-money-bill"></i> <span>Pembayaran</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link">
+                                <i class="fas fa-comment-alt"></i> <span>Review</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-10 main-content">
+                <!-- Dashboard Header -->
+                <div class="header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0">Dashboard</h3>
+                        <div class="d-flex">
+                            <div class="input-group me-2" style="width: 300px;">
+                                <input type="text" class="form-control" placeholder="Cari produk...">
+                                <button class="btn btn-primary" type="button"><i class="fas fa-search"></i></button>
+                            </div>
+                            <button class="btn btn-outline-primary"><i class="fas fa-bell"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="dashboard-card card-1">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="stat-number">12</div>
+                                    <div class="stat-desc">Jumlah produk yang tersedia</div>
+                                </div>
+                                <i class="fas fa-boxes fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="dashboard-card card-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="stat-number">3</div>
+                                    <div class="stat-desc">Pelanggan yang terdaftar</div>
+                                </div>
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="dashboard-card card-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="stat-number">2</div>
+                                    <div class="stat-desc">Jumlah pesanan terbaru</div>
+                                </div>
+                                <i class="fas fa-shopping-cart fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="dashboard-card card-4">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="stat-number">Rp.4.262.600,00</div>
+                                    <div class="stat-desc">Total pendapatan</div>
+                                </div>
+                                <i class="fas fa-wallet fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="recent-orders">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5>Pesanan Terbaru</h5>
+                                <a href="#" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+                            </div>
+                            
+                            <div class="order-item">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <div class="fw-bold">Order #SK12345</div>
+                                        <div class="text-muted small">2 produk • Rp.1.250.000</div>
+                                    </div>
+                                    <div>
+                                        <span class="order-status status-processing">Diproses</span>
+                                    </div>
+                                </div>
+                                <div class="mt-2 d-flex justify-content-between">
+                                    <div class="text-muted small">
+                                        <i class="fas fa-user me-1"></i> Rani Putri • 12 Jul 2023
+                                    </div>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+                                </div>
+                            </div>
+                            
+                            <div class="order-item">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <div class="fw-bold">Order #SK12344</div>
+                                        <div class="text-muted small">3 produk • Rp.980.000</div>
+                                    </div>
+                                    <div>
+                                        <span class="order-status status-pending">Menunggu Pembayaran</span>
+                                    </div>
+                                </div>
+                                <div class="mt-2 d-flex justify-content-between">
+                                    <div class="text-muted small">
+                                        <i class="fas fa-user me-1"></i> Budi Santoso • 11 Jul 2023
+                                    </div>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+                                </div>
+                            </div>
+                            
+                            <div class="order-item">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <div class="fw-bold">Order #SK12343</div>
+                                        <div class="text-muted small">1 produk • Rp.2.032.600</div>
+                                    </div>
+                                    <div>
+                                        <span class="order-status status-completed">Selesai</span>
+                                    </div>
+                                </div>
+                                <div class="mt-2 d-flex justify-content-between">
+                                    <div class="text-muted small">
+                                        <i class="fas fa-user me-1"></i> Siti Rahayu • 10 Jul 2023
+                                    </div>
+                                    <a href="#" class="btn btn-sm btn-outline-primary">Lihat Detail</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Categories -->
+                    <div class="col-md-4">
+                        <div class="recent-orders">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5>Kategori Produk</h5>
+                                <a href="#" class="btn btn-sm btn-outline-primary">Kelola</a>
+                            </div>
+                            
+                            <div class="d-flex flex-wrap">
+                                <span class="badge-category"><i class="fas fa-spa me-1"></i> Facial Wash</span>
+                                <span class="badge-category"><i class="fas fa-spa me-1"></i> Toner</span>
+                                <span class="badge-category"><i class="fas fa-spa me-1"></i> Serum</span>
+                                <span class="badge-category"><i class="fas fa-spa me-1"></i> Moisturizer</span>
+                                <span class="badge-category"><i class="fas fa-spa me-1"></i> Sunscreen</span>
+                                <span class="badge-category"><i class="fas fa-spa me-1"></i> Masker</span>
+                                <span class="badge-category"><i class="fas fa-spa me-1"></i> Eye Cream</span>
+                                <span class="badge-category"><i class="fas fa-spa me-1"></i> Treatment</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment Confirmation -->
+                        <div class="recent-orders mt-4">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5>Konfirmasi Pembayaran</h5>
+                                <a href="#" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <div class="d-flex">
+                                    <i class="fas fa-info-circle me-2 mt-1"></i>
+                                    <div>
+                                        <strong>2 pembayaran</strong> menunggu konfirmasi
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary w-100">
+                                <i class="fas fa-check-circle me-1"></i> Konfirmasi Pembayaran
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product List -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="recent-orders">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5>Produk Terbaru</h5>
+                                <a href="#" class="btn btn-outline-primary"><i class="fas fa-plus me-1"></i> Tambah Produk</a>
+                            </div>
+                            
+                            <div class="product-grid">
+                                <!-- Product 1 -->
+                                <div class="product-card">
+                                    <img src="https://images.unsplash.com/photo-1591348131719-8c1a7b8f2b9a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c2tpbmNhcmUlMjBwcm9kdWN0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" class="product-image w-100">
+                                    <div class="p-3">
+                                        <div class="product-title">Facial Wash Brightening</div>
+                                        <div class="product-price">Rp. 185.000</div>
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <span class="badge bg-success">Stok: 15</span>
+                                            <div>
+                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Product 2 -->
+                                <div class="product-card">
+                                    <img src="https://images.unsplash.com/photo-1620916297395-90b5f8e4d54e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2tpbmNhcmUlMjBwcm9kdWN0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60" class="product-image w-100">
+                                    <div class="p-3">
+                                        <div class="product-title">Hydrating Toner</div>
+                                        <div class="product-price">Rp. 245.000</div>
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <span class="badge bg-warning text-dark">Stok: 3</span>
+                                            <div>
+                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Product 3 -->
+                                <div class="product-card">
+                                    <img src="https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHNraW5jYXJlJTIwcHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" class="product-image w-100">
+                                    <div class="p-3">
+                                        <div class="product-title">Vitamin C Serum</div>
+                                        <div class="product-price">Rp. 320.000</div>
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <span class="badge bg-success">Stok: 22</span>
+                                            <div>
+                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Product 4 -->
+                                <div class="product-card">
+                                    <img src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHNraW5jYXJlJTIwcHJvZHVjdHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60" class="product-image w-100">
+                                    <div class="p-3">
+                                        <div class="product-title">Moisturizing Cream</div>
+                                        <div class="product-price">Rp. 275.000</div>
+                                        <div class="d-flex justify-content-between mt-3">
+                                            <span class="badge bg-success">Stok: 18</span>
+                                            <div>
+                                                <button class="btn btn-sm btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                                <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simple cart counter
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add to cart functionality
+            const addToCartButtons = document.querySelectorAll('.add-to-cart');
+            const cartCount = document.querySelector('.notification-badge');
+            let count = parseInt(cartCount.textContent);
+            
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    count++;
+                    cartCount.textContent = count;
+                    
+                    // Show notification
+                    const toast = document.createElement('div');
+                    toast.classList.add('position-fixed', 'bottom-0', 'end-0', 'p-3');
+                    toast.style.zIndex = '11';
+                    
+                    toast.innerHTML = `
+                        <div id="liveToast" class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header bg-success text-white">
+                                <strong class="me-auto"><i class="fas fa-check-circle me-2"></i>Berhasil</strong>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                Produk telah ditambahkan ke keranjang!
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(toast);
+                    
+                    // Remove toast after 3 seconds
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 3000);
+                });
+            });
+            
+            // Dashboard card animation
+            const cards = document.querySelectorAll('.dashboard-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
